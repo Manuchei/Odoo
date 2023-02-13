@@ -8,3 +8,6 @@ class Vehiculo(models.Model):
     modelo = fields.Char(string="Modelo", required=True)
     marca = fields.Char(string="Marca")
     descripcion = fields.Text()
+    #Con la relación many2one me permite seleccionar un usuario o crearlo directamente
+    propietario_id = fields.Many2one('res.users',
+        ondelete='set null', string="Propietario", index=True)

@@ -1,0 +1,39 @@
+<odoo>
+    <data>
+        <!-- session form view -->
+        <record model="ir.ui.view" id="viaje_form_view">
+            <field name="name">viaje.form</field>
+            <field name="model">viajes.viaje</field>
+            <field name="arch" type="xml">
+                <form string="Formulario de Viajes">
+                    <sheet>
+                        <group>
+                            <field name="titulo" />
+                            <field name="fecha_inicio" />
+                            <field name="duracion" />
+                            <field name="plazas" />
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+        <record model="ir.ui.view" id="viaje_tree_view">
+            <field name="name">viaje.tree</field>
+            <field name="model">viajes.viaje</field>
+            <field name="arch" type="xml">
+                <tree string="Viaje Tree">
+                    <field name="titulo" />
+                    <field name="duracion" />
+                </tree>
+            </field>
+        </record>
+        <record model="ir.actions.act_window" id="viaje_list_action">
+            <field name="name">Viajes</field>
+            <field name="res_model">viajes.viaje</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+        <menuitem id="viaje_menu" name="Viajes"
+            parent="viajes_menu"
+            action="viaje_list_action" />
+    </data>
+</odoo>

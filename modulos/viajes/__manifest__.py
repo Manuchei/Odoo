@@ -26,7 +26,8 @@
     'data': [
         'security/ir.model.access.csv',
         'views/vehiculo.xml',
-         'views/viaje.xml',
+        'views/viaje.xml',
+        'views/partner.xml',
 
     ],
     # only loaded in demonstration mode

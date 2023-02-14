@@ -2,4 +2,5 @@
 
 from . import VehiculoModel
 from . import ViajeModel
+from . import PartnerModel
 

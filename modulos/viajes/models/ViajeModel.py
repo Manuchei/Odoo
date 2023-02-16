@@ -1,5 +1,7 @@
 from odoo import models, fields, api
 from datetime import timedelta
+from openerp.exceptions import ValidationError
+
 
 
 class Viaje(models.Model):
@@ -23,3 +25,40 @@ class Viaje(models.Model):
 
     # puedo elegir uno(partner/cliente) que ya existe o crear uno nuevo
     pasajeros_ids = fields.Many2many('res.partner', string="Pasajeros")
+
+    plazas_ocupadas = fields.Float(string="Plazas ocupadas", compute='_get_plazas_ocupadas')
+    finalizado = fields.Boolean(default=False)
+
+
+    @api.depends('plazas', 'pasajeros_ids')
+    def _get_plazas_ocupadas(self):
+        for r in self:
+            if not r.plazas:
+                r.plazas_ocupadas = 0.0
+            else:
+                r.plazas_ocupadas = 100.0 * len(r.pasajeros_ids) / r.plazas
+
+    @api.onchange('plazas', 'pasajeros_ids')
+    def _checkearPlazasValidas(self):
+        if self.plazas < 0:
+            self.plazas = 0
+            return {
+                'warning': {
+                    'title': "Valor de 'plazas' incorrecto",
+                    'message': "El numero de plazas disponibles no puede ser negativo",
+                },
+            }
+        if self.plazas < len(self.pasajeros_ids):
+            return {
+                'warning': {
+                    'title': "Demasiados pasajeros",
+                    'message': "Incrementa el nº de plazas o elimina pasajeros",
+                },
+            }
+
+    @api.constrains('conductor_id', 'pasajeros_ids')
+    def _comprobarConductorNoEsPasajero(self):
+        for r in self:
+            if r.conductor_id and r.conductor_id in r.pasajeros_ids:
+                raise ValidationError("Un conductor no puede ser también pasajero")
+
